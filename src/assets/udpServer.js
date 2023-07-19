@@ -7,8 +7,13 @@ udpServer.bind(PORT, HOST);
 udpServer.on('listening',()=> console.log('udp server listening'));
 udpServer.on('message', (msg, rinfo) => { // Receives from java on 9001
   console.log(`Received ${msg.length} bytes from ${rinfo.address}:${rinfo.port}`);
-  console.log("msg: at 0"+msg.toString());
-    io.emit('udp-message', msg.toString());
+  let meesage = msg.toString().substring(1, msg.toString().length-2);
+  console.log("msg:"+meesage);
+  if(msg.toString().includes("radarId")){
+    io.emit('udp-message', meesage);
+  }else{
+    console.log("this is a radar meesage");
+  }
 });
 
 // Expose an HTTP endpoint that can be called from the Vue.js frontend
