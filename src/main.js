@@ -6,7 +6,6 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import VueGoogleMaps from '@fawmi/vue-google-maps'
-import "bootstrap/dist/css/bootstrap.css";
 import axios from 'axios';
 import VueAxios from 'vue-axios'
 const app = createApp(App)

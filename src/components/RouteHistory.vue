@@ -35,28 +35,3 @@ let markersList = useMarkersStore() // to access waypoints array across pages
     </div>
   </div>
 </template>
-<style>
-.table {
-  width: 90% !important;
-  overflow: auto;
-}
-.my-custom-scrollbar {
-  position: relative;
-  height: 60vh;
-  overflow: auto;
-}
-.table-wrapper-scroll-y {
-  display: block;
-}
-.table-responsive::-webkit-scrollbar {
-  width: 0.7rem;
-  height: 0.8rem;
-}
-.table-responsive::-webkit-scrollbar-track {
-  background-color: #150a2c;
-}
-.table-responsive::-webkit-scrollbar-thumb {
-  background-color: #5005f35e;
-  border-radius: 2px;
-}
-</style>

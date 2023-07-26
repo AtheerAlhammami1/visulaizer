@@ -52,6 +52,7 @@ function sendToUDPServer() {
 </script>
 
 <template>
+
   <main class="home container m-auto">
     <div class="history mt-4">
       <div class="history-content mt-5">
@@ -64,25 +65,3 @@ function sendToUDPServer() {
   </main>
 </template>
 
-<style>
-.home {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 2rem auto;
-}
-.history {
-  width: 30vw;
-  border-right: 1px solid rgb(99, 97, 97);
-  border-radius: 12px;
-  box-shadow: 15px 20px #a7a6a600;
-}
-.map {
-  width: 70vw;
-  margin: 3rem auto 2rem;
-}
-.vue-map {
-  margin: auto;
-  width: 700px !important;
-  height: 450px !important;
-}
-</style>
