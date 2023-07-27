@@ -9,7 +9,7 @@
       <CloseButton/>
 
       <h3 class="font-bold text-lg mb-2">{{ props.modalTitle }}</h3>
-     <slot/>
+        <slot/>
       <div class="modal-action flex justify-center">
         <!-- if there is a button in form, it will close the modal -->
         <button class="btn btn-wide" :onclick="Event" @click="progess++">{{ SubmitText }}</button>
