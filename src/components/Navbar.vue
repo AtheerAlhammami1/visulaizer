@@ -14,9 +14,38 @@ function toggletheme(){
   document.querySelector('html').setAttribute('data-theme', newTheme);
 
 }
-let sam = ref('')
+let sam = ref()
+let fhd = ref()
+
 </script>
 <template>
+
+<div class="lg:absolute  h-20 w-40">
+  <div class="drawer p-4">
+    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content">
+      <!-- Page content here -->
+      <label for="my-drawer" class="btn btn-circle swap swap-rotate">
+        <svg class="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/></svg>
+      </label>
+    </div>
+    <div class="drawer-side">
+      <label for="my-drawer" class="drawer-overlay"></label>
+      <ul class="menu p-4 w-80 h-full bg-base-200 text-base-content">
+        <img class="bg-white p-3 mt-7 rounded" src="https://wakeb.tech/front/images/logo.png" alt="Wakeb Logo" >
+
+        <li >
+          <a onclick="my_modal_1.showModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+           Create Scenario
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
   <div class="navbar bg-base-100">
     <div class="navbar-start">
       <div class="dropdown">
@@ -26,33 +55,18 @@ let sam = ref('')
         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 drop-shadow-2xl bg-base-100 rounded-box w-52">
 
           <li>
-            <a class="font-bold">Scenarios</a>
-            <ul class="p-2">
-              <li>
-                <a  onclick="my_modal_1.showModal()">
-                  Create new Scenario
-                </a>
-              </li>
-
-            </ul>
+            Scenario Builder
           </li>
 
         </ul>
       </div>
-      <a class="btn btn-ghost normal-case text-xl">Scenario builder </a>
+
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal drop-shadow-2xl px-1">
 
-        <li tabindex="0" class="">
-          <details>
-            <summary class="font-bold text-lg ">Scenarios</summary>
-            <ul class="p-2 font-bold">
-              <li>
-                <a onclick="my_modal_1.showModal()">Create new Scenario</a>
-              </li>
-            </ul>
-          </details>
+        <li class="font-bold text-lg">
+          Scenario Builder
         </li>
 
       </ul>
@@ -74,16 +88,21 @@ let sam = ref('')
   </div>
 
 
-  <Modal modalId="my_modal_1" modalTitle="Create Scenario" SubmitText="Sm" Event="my_modal_2.showModal()" >
+  <Modal modalId="my_modal_1" modalTitle="Create Scenario" SubmitText="Sm" Event="my_modal_2.showModal()" :Progress="1" >
     <InputText  v-model="sam" label="Scenario Name" placeHolder="Enter Scenario name"/>
+    <InputText  v-model="fhd" label="Scenario Name" placeHolder="Enter Scenario name"/>
+
   </Modal>
 
 
-  <Modal modalId="my_modal_2" modalTitle="Create Entity" SubmitText="Next" Event="my_modal_3.showModal()">
+  <Modal modalId="my_modal_2" modalTitle="Create Entity" SubmitText="Next" Event="my_modal_3.showModal()" :Progress="2">
   <InputText label="Scenario Name" placeHolder="Enter Scenario name"/>
   </Modal>
 
-  <Modal modalId="my_modal_3" modalTitle="Create s" SubmitText="s">
+  <Modal modalId="my_modal_3" modalTitle="Create s" SubmitText="s" :Progress="3">
     <InputText label="s Name" placeHolder="Enter s name"/>
   </Modal>
+
+
+
 </template>
