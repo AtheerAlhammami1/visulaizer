@@ -1,7 +1,7 @@
 <template>
   <dialog :id="props.modalId" class="modal">
-    <form method="dialog" class="modal-box w-fit ">
-      <ul class="steps py-5 mb-3">
+    <form method="dialog" class="modal-box p-8 w-fit ">
+      <ul class="steps mb-8">
         <li class="step" :class="isStepOneComplete">Create Scenario</li>
         <li class="step" :class="isStepTwoComplete">Create Entity</li>
         <li class="step" :class="isStepThreeComplete">Select Points</li>
@@ -22,7 +22,7 @@
 </template>
 <script setup>
 
-import CloseButton from "@/components/CloseButton.vue";
+import CloseButton from "@/components/Buttons/IconCloseButton.vue";
 import {computed, ref} from "vue";
 
 

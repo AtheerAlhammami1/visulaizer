@@ -1,6 +1,6 @@
 <script setup>
-import Map from '../components/Maps.vue'
-import RouteHistory from '../components/RouteHistory.vue'
+import Map from '../components/Map.vue'
+import RouteHistory from '../components/TableRouteHistory.vue'
 import { onMounted, reactive, ref, inject } from 'vue'
 import { useMarkersStore } from '../stores/useMarkers'
 import { io } from 'socket.io-client'
