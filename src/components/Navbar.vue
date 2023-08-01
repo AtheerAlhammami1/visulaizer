@@ -1,18 +1,13 @@
 <script setup>
-import Modal from "@/components/Modal.vue";
-import InputText from "@/components/Inputs/InputText.vue";
-import DropDown from "@/components/Inputs/DropDown.vue";
-import { ref, onMounted } from 'vue';
-import milsymbol from 'milsymbol';
+import { ref} from 'vue';
 
 async function toggletheme(){
-  const currentTheme = localStorage.getItem('theme');
+  const currentTheme = localStorage.getItem('theme'); // Light
   // Toggle between "light" and "dark" themes
-  const newTheme = currentTheme === 'light' ? 'synthwave' : 'light';
+   const newTheme =  currentTheme === 'light' ? 'synthwave' : 'light';
   // Set the new theme in localStorage
   localStorage.setItem('theme', newTheme);
-
- await document.querySelector('html').setAttribute('data-theme', newTheme);
+  document.querySelector('html').setAttribute('data-theme', newTheme);
 }
 
 let Sam = ref({})
@@ -37,11 +32,20 @@ let Sam = ref({})
           <div class="drawer-side">
             <label for="my-drawer" class="drawer-overlay"></label>
             <ul class="menu p-4 w-80 h-full bg-base-200 text-base-content flex flex-col items-center justify-between">
-              <img class="bg-white p-3 mt-7 rounded" src="https://wakeb.tech/front/images/logo.png" alt="Wakeb Logo" >
 
-              <div class="flex flex-col items-center justify-center flex-grow">
+              <router-link :to="{name : 'home'}">
+                <img class="bg-white p-3 mt-7 rounded" src="https://wakeb.tech/front/images/logo.png" alt="Wakeb Logo" >
+              </router-link>
+
+              <div class="flex flex-col items-center justify-center flex-grow gap-y-3 text-lg font-bold ">
                 <li>
-                  <router-link :to="{name : 'Scenarios'}"  class="flex items-center justify-center text-lg font-bold">
+                  <router-link :to="{name : 'home'}" >
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.25em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg>
+                    Home
+                  </router-link>
+                </li>
+                <li>
+                  <router-link :to="{name : 'Scenarios'}" >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
 
                     Scenarios

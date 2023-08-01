@@ -6,7 +6,7 @@ defineProps({
 })
 </script>
 <template>
-  <div class="map">
+  <div style="height: 40vw">
     <div id="googleMap">
       <GMapMap :center="center" :zoom="7" map-type-id="terrain">
         <GMapCluster>
