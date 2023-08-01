@@ -1,6 +1,6 @@
 <template>
   <dialog :id="props.modalId" class="modal">
-    <form method="dialog" class="modal-box p-8 w-fit ">
+    <form method="dialog" class="modal-box p-8 w-fit" >
       <ul class="steps mb-8">
         <li class="step" :class="isStepOneComplete">Create Scenario</li>
         <li class="step" :class="isStepTwoComplete">Create Entity</li>

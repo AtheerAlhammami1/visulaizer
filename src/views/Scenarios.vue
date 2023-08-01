@@ -139,7 +139,6 @@ const date =ref('')
 
 <template>
 
-
   <div class="overflow-x-auto">
     <table class="table">
       <!-- head -->
@@ -198,3 +197,8 @@ const date =ref('')
 </template>
 
 
+<style>
+.table{
+  position:unset;
+}
+</style>
