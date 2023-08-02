@@ -8,7 +8,6 @@ import milsymbol from "milsymbol";
 import { ref} from 'vue';
 
 
-const table_Column = ['Scenario Name' , 'Number of entities' , 'Number of waypoint' , 'Duration' ,'Action']
 const table_Data   = [
   {
     id : 1 ,
@@ -90,9 +89,6 @@ const entityClassification = [
 ]
 const selectedEntityType = ref('Select Entity Type')
 const selectedEntityClassification = ref('Select Classification type')
-
-
-
 let natoSIDC = '300310000012110000000';
 
 function setNatoClassification(Num){
@@ -103,36 +99,38 @@ function setNatoType(Num){
 }
 function getSIDC(entityArray, name) {
   const entity = entityArray.find(entity => entity.name === name);
-  return entity ? entity.SIDC : null;
+  return entity ? entity.SIDC : null;//change
 }
-
-
 
 
 const iconCanvas = ref(null);
 
-function ICon() {
+function natoSymbologyGenerator() {
   const canvas = iconCanvas.value;
-  const ctx = canvas.getContext('2d');
+  const canvasContext = canvas.getContext('2d');
   canvas.width = 160;
   canvas.height = 160;
 
   setNatoClassification( getSIDC(entityClassification ,selectedEntityClassification.value))
   setNatoType( getSIDC(entityType ,selectedEntityType.value))
+  printNatoSymbologyGenerator();
+  const natoIcon = new milsymbol.Symbol(natoSIDC);
+  const svgString = natoIcon.asSVG();
+  const canvasImage = new Image();
+
+  canvasImage.onload = () => {
+    canvasContext.drawImage(canvasImage, 0, 0, canvas.width, canvas.height);
+  };
+
+  canvasImage.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
+}
+function printNatoSymbologyGenerator(){
   console.log(getSIDC(entityType ,selectedEntityType.value))
   console.log(getSIDC(entityClassification ,selectedEntityClassification.value))
   console.log(natoSIDC)
-  const icon = new milsymbol.Symbol(natoSIDC);
-  const svgString = icon.asSVG();
-
-  const img = new Image();
-  img.onload = () => {
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-
-  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
 }
-const date =ref('')
+const table_Column = ['Scenario Name' , 'Number of entities' , 'Number of waypoint' , 'Duration' ,'Action']
+
 </script>
 
 
@@ -183,10 +181,10 @@ const date =ref('')
 
   <Modal  modalId="my_modal_2" modalTitle="Create Entity" SubmitText="Next" Event="my_modal_3.showModal()" :Progress="2">
     <InputText label="Entity Name" placeHolder="Enter Entity name"/>
-    <DropDown @click="ICon" v-model="selectedEntityType" :Options="entityType" label="Entity Type" placeHolder="Pick One" />
-    <DropDown @click="ICon" v-model="selectedEntityClassification"  :Options="entityClassification" label="Entity Classification" placeHolder="Chose One" />
+    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityType" :Options="entityType" label="Entity Type" placeHolder="Pick One" />
+    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityClassification"  :Options="entityClassification" label="Entity Classification" placeHolder="Chose One" />
     <div class="flex flex justify-center mt-5">
-    <canvas ref="iconCanvas"/>
+      <canvas ref="iconCanvas"/>
     </div>
     <p class="text-center mt-5"> Nato SIDC : {{natoSIDC}}</p>
   </Modal>

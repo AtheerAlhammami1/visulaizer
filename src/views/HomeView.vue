@@ -24,11 +24,14 @@ function listenToUDPServer() {
 /*
  ** Function to add a new waypoint/marker to the list
  */
-function trackRecieved(newTrack) {
+
+function trackRecieved(jsonMessageRecieved) {
+  let track=jsonMessageRecieved;
   let rowCount = document.getElementById('tableRoutes').rows.length
-  markersList.insert(rowCount + 1, newTrack.id, newTrack.latitude, newTrack.longitude)
-  center.lat = newTrack.latitude // move map focal point to the new waypoint
-  center.lng = newTrack.longitude
+  markersList.insert(rowCount + 1, track.id, track.latitude, track.longitude)
+  center.lat = track.latitude // move map focal point to the new waypoint
+  center.lng = track.longitude
+  console.log(jsonMessageRecieved);
 }
 /*
  ** Function to send From vue to UDP Server
