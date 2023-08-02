@@ -1,17 +1,15 @@
 /** @type {import('tailwindcss').Config} */
-
-
-module.exports = {
-   content: [
+export default {
+  content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
   },
-  plugins: [require("daisyui")],
-    daisyui : {
-        themes: ['light', 'synthwave'],
-    }
+   // eslint-disable-next-line no-undef
+   plugins: [require('daisyui')],
+   daisyui: {
+     themes: ['light', 'synthwave']
 }
-
+}

@@ -1,4 +1,9 @@
-let dgram = require('dgram');
+import cors from 'cors'
+import dgram from 'dgram'
+import express from 'express'
+import http from 'http'
+import { Server } from 'socket.io'
+
 const udpServer = dgram.createSocket('udp4')
 const PORT = 9001 // sender 9001
 const HOST = '127.0.0.1'
@@ -7,27 +12,25 @@ udpServer.bind(PORT, HOST);
 udpServer.on('listening',()=> console.log('udp server listening'));
 udpServer.on('message', (msg, rinfo) => { // Receives from java on 9001
   console.log(`Received ${msg.length} bytes from ${rinfo.address}:${rinfo.port}`);
-  let meesage = msg.toString().substring(1, msg.toString().length-2);
-  console.log("msg:"+meesage);
+  let message = msg.toString().substring(1, msg.toString().length-2);
+  console.log("msg:"+message);
   if(msg.toString().includes("radarId")){
-    io.emit('udp-message', meesage);
+    io.emit('udp-message', message);
   }else{
     console.log("this is a radar meesage");
   }
 });
 
 // Expose an HTTP endpoint that can be called from the Vue.js frontend
-const express = require('express');
 const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server,{
+const server = http.createServer(app)
+const io = new Server(server, {
   cors: {
     origin: "http://127.0.0.1:5173",
     methods: ["GET", "POST"]
   }
 });
 
-const cors = require('cors');
 app.use(cors({
     origin: 'http://127.0.0.1:5173'
 }));
