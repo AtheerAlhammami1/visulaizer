@@ -101,7 +101,7 @@ function natoSymbologyGenerator() {
   canvasImage.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
 }
 
-
+let x = ref("")
 </script>
 
 
@@ -117,15 +117,15 @@ function natoSymbologyGenerator() {
 
 
   <Modal modalId="my_modal_1" modalTitle="Create Scenario" SubmitText="Next" Event="my_modal_2.showModal()" :Progress="1" >
-    <InputText  label="Scenario Name" placeHolder="Enter Scenario name"/>
+    <InputText v-model="x" label="Scenario Name" placeHolder="Enter Scenario name"/>
   </Modal>
 
 
 
   <Modal  modalId="my_modal_2" modalTitle="Create Entity" SubmitText="Next" Event="my_modal_3.showModal()" :Progress="2">
     <InputText label="Entity Name" placeHolder="Enter Entity name"/>
-    <DropDown v-model="selectedEntityType" :Options="entityType.keys()" label="Entity Type" placeHolder="Pick One" />
-    <DropDown v-model="selectedEntityClassification"  :Options="entityClassification.keys()" label="Entity Classification" placeHolder="Chose One" />
+    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityType" :Options="entityType.keys()" label="Entity Type" placeHolder="Pick One" />
+    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityClassification"  :Options="entityClassification.keys()" label="Entity Classification" placeHolder="Chose One" />
     <div class="flex flex justify-center mt-5">
       <canvas ref="iconCanvas"/>
     </div>
