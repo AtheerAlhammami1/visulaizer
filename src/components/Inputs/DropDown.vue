@@ -5,17 +5,21 @@
     </label>
     <select :value="modelValue" @input="updateValue"  class="select select-bordered">
       <option disabled selected>{{ modelValue }}</option>
-      <option v-for="item in Options">{{ item.name }}</option>
+      <option @click="natoSymbologyGenerators" v-for="item in Options">{{ item }}</option>
     </select>
   </div>
 </template>
 <script setup>
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue' , 'natoSymbologyGenerators']);
 
 const updateValue = (event) => {
   emit('update:modelValue', event.target.value);
+  emit('natoSymbologyGenerators')
 };
+const natoSymbologyGenerators = () => {
+  emit('natoSymbologyGenerator')
+}
 const props = defineProps({
   label : String,
   placeHolder :String,

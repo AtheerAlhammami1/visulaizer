@@ -47,12 +47,13 @@ const table_Data   = [
 ]
 //-------------------------------------------------------------------------
 
-const entityType =
-{
+const entityType = {
   Aircraft :121900,
   Infantry : 121100,
-  Tank :121100
-
+  Tank :121100,
+  keys: function() {
+    return Object.keys(this).filter(key => typeof this[key] !== 'function');
+  }
 }
 const entityClassification = {
     Pending : 0 ,
@@ -61,8 +62,11 @@ const entityClassification = {
     Friend : 3 ,
     Natural : 4 ,
     Subsect : 5 ,
-    Hostile : 6
+    Hostile : 6 ,
+  keys: function() {
+    return Object.keys(this).filter(key => typeof this[key] !== 'function');
   }
+}
 
 
 const selectedEntityType = ref('Select Entity Type')
@@ -75,21 +79,15 @@ function setNatoClassificationSIDC(Num){
 function setNatoTypeSIDC(Num){
   natoSIDC = natoSIDC.slice(0, 10) + Num + natoSIDC.slice(10 + Num.toString().length);
 }
-function getSIDC(entityArray, name) {
-  const entity = entityArray.find(entity => entity.name === name);
-  return entity ? entity.SIDC : null;//change
-}
-
-
 const iconCanvas = ref(null);
-
 function natoSymbologyGenerator() {
   const canvas = iconCanvas.value;
   const canvasContext = canvas.getContext('2d');
   canvas.width = 160;
   canvas.height = 160;
-  const entityTypeSIDC = getSIDC(entityClassification ,selectedEntityClassification.value)
-  const entityClassificationSIDC = getSIDC(entityType ,selectedEntityType.value)
+  const entityTypeSIDC = entityType[selectedEntityType.value]
+  const entityClassificationSIDC = entityClassification[selectedEntityClassification.value]
+
   setNatoClassificationSIDC(entityClassificationSIDC)
   setNatoTypeSIDC(entityTypeSIDC)
   const natoIcon = new milsymbol.Symbol(natoSIDC);
@@ -104,7 +102,6 @@ function natoSymbologyGenerator() {
 }
 
 
-console.error(typeof entityType)
 </script>
 
 
@@ -127,8 +124,8 @@ console.error(typeof entityType)
 
   <Modal  modalId="my_modal_2" modalTitle="Create Entity" SubmitText="Next" Event="my_modal_3.showModal()" :Progress="2">
     <InputText label="Entity Name" placeHolder="Enter Entity name"/>
-    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityType" :Options="entityType.keys" label="Entity Type" placeHolder="Pick One" />
-    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityClassification"  :Options="entityClassification" label="Entity Classification" placeHolder="Chose One" />
+    <DropDown v-model="selectedEntityType" :Options="entityType.keys()" label="Entity Type" placeHolder="Pick One" />
+    <DropDown v-model="selectedEntityClassification"  :Options="entityClassification.keys()" label="Entity Classification" placeHolder="Chose One" />
     <div class="flex flex justify-center mt-5">
       <canvas ref="iconCanvas"/>
     </div>
