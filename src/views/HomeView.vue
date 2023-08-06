@@ -6,9 +6,9 @@ import { useMarkersStore } from '../stores/useMarkers'
 import { io } from 'socket.io-client'
 let markersList = useMarkersStore() // to access waypoints array across pages
 let center = reactive({ lat: 24, lng: 47 }) // center of the map view
-const socket = io('http://127.0.0.1:3000')
+// const socket = io('http://127.0.0.1:3000')
 onMounted(() => {
-  listenToUDPServer()
+  // listenToUDPServer()
 })
 /*
  ** Function to act upon recieving udp messages
@@ -56,15 +56,9 @@ function sendToUDPServer() {
 
 <template>
 
-  <main class="home container m-auto">
-    <div class="history mt-4">
-      <div class="history-content mt-5">
-        <RouteHistory></RouteHistory>
-      </div>
-    </div>
-    <div class="map-section">
-      <Map :center="center" />
-    </div>
+  <main class="flex justify-center w-full h-full">
+      <RouteHistory class="w-1/2 h-full border-2"></RouteHistory>
+      <Map  :center="center"></Map>
   </main>
 </template>
 

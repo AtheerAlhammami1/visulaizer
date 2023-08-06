@@ -9,19 +9,8 @@ onMounted( () => {
   }else{
     localStorage.setItem("theme",theme)
   }
-
-  // if(!document.querySelector('html').getAttribute('data-theme').length){
-  console.error(theme)
     document.querySelector('html').setAttribute('data-theme', theme);
-  // }
-
 })
-
-
-// let theme = document.querySelector('html').getAttribute('data-theme');
-// localStorage.setItem('theme' , theme)
-
-
 </script>
 
 <template>
