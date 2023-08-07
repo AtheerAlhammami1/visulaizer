@@ -5,13 +5,12 @@ export let useMarkersStore = defineStore('markersStore',{
     state(){
         return{
             markers: [],
-            id:1
         }
     },
     actions:{
         insert(latitude, longitude){
         this.markers.push({
-            id:this.id,
+            id:this.markers.length + 1,
             position: {
             lat: latitude,
             lng: longitude
@@ -24,6 +23,9 @@ export let useMarkersStore = defineStore('markersStore',{
         },
         removeWaypoint(index){
             this.markers.splice(index,1)
+            for(let i = index; i< this.markers.length; i++){
+                this.markers[i].id= i + 1;
+            }
         }
     }
 })
