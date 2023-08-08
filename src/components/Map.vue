@@ -1,16 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useMarkersStore } from '../stores/useMarkers'
-let markersList = useMarkersStore() //to access waypoints array across pages
-defineProps({
-  center: Object
-})
 
-const numberOfLines = computed(
-  () =>
-    Math.floor(markersList.markers.length / 2) +
-    Math.floor(Math.abs(markersList.markers.length - 1) / 2)
-)
+let markersList = useMarkersStore() //to access waypoints array across pages
 let show = ref(false)
 let lastShowedWayPointIndex = -1
 
@@ -24,17 +16,30 @@ function addWayPoint(e) {
   }
 }
 
-function updateWeypoint(e, index) {
+function updateWaypoint(e, index) {
   const position = { lat: e.latLng.lat(), lng: e.latLng.lng() }
   markersList.updateWaypoint(index, position)
 }
 
 function removeWaypoint(index) {
+  markersList.removeWaypoint(index)
   if (lastShowedWayPointIndex == index) {
     show.value = false
     lastShowedWayPointIndex = -1
+  } else if (lastShowedWayPointIndex > index) {
+    lastShowedWayPointIndex = lastShowedWayPointIndex - 1
+    updateInformationModal(lastShowedWayPointIndex)
   }
-  markersList.removeWaypoint(index)
+}
+
+function updateInformationModal(index) {
+  const modal = document.querySelector('div#modal')
+  const waypoint = markersList.markers[index]
+  modal.innerHTML = `
+  <h5 style="color:inherit;">ID: ${waypoint.id}</h5>
+  <p style="color:inherit;">Lat: ${waypoint.position.lat}</p>
+  <p style="color:inherit;">Lng: ${waypoint.position.lng}</p>
+  `
 }
 
 function toggleInformationModal(e, index) {
@@ -52,36 +57,45 @@ function toggleInformationModal(e, index) {
   const mapLocation = map.getBoundingClientRect()
 
   modal.innerHTML = `
-  <h5 style="color:black;">ID: ${waypoint.id}</h5>
-  <p style="color:black;">Lat: ${waypoint.position.lat}</p>
-  <p style="color:black;">Lng: ${waypoint.position.lng}</p>
+  <h5 style="color:inherit;">ID: ${waypoint.id}</h5>
+  <p style="color:inherit;">Lat: ${waypoint.position.lat}</p>
+  <p style="color:inherit;">Lng: ${waypoint.position.lng}</p>
   `
 
   if (mapLocation.left + mapLocation.width - e.domEvent.x > mapLocation.width / 2) {
     modal.style.left = e.domEvent.x + 20 + 'px'
     modal.style.top = e.domEvent.y + 20 + 'px'
   } else {
-    modal.style.left = e.domEvent.x - (mapLocation.width / 2.484 + 20) + 'px'
+    modal.style.left = e.domEvent.x - (mapLocation.width * 0.4 + 20) + 'px'
     modal.style.top = e.domEvent.y + 20 + 'px'
   }
 }
-const RED_LOCATION_ICON = 'src/assets/images/redLocationIcon.svg'
-const YELLOW_LOCATION_ICON = 'src/assets/images/yellowLocationIcon.svg'
-const GREEN_LOCATION_ICON = 'src/assets/images/GreenLocationIcon.svg'
+
 function iconColor(index) {
-  return index == 0
-    ? RED_LOCATION_ICON
-    : index == markersList.markers.length - 1
-    ? GREEN_LOCATION_ICON
-    : YELLOW_LOCATION_ICON
+  const path = 'src/assets/images/'
+  const fileName =
+    index == 0
+      ? 'redLocationIcon.svg'
+      : index == markersList.markers.length - 1
+      ? 'GreenLocationIcon.svg'
+      : 'yellowLocationIcon.svg'
+  return path + fileName
 }
+
+defineProps({
+  center: Object
+})
+
+const numberOfLines = computed(() =>
+  markersList.markers.length == 0 ? 0 : markersList.markers.length - 1
+)
 </script>
 <template>
   <main class="w-1/2 h-full border-2">
     <div
       v-show="show"
       id="modal"
-      class="w-1/5 h-1/5 bg-white absolute z-10 p-5 border-2 border-slate-900 opacity-80"
+      class="w-1/5 h-1/5 absolute z-10 p-5 border-2 border-b-slate-600 opacity-80 bg-base-100"
     ></div>
     <GMapMap :center="center" :zoom="7" map-type-id="terrain" @click="addWayPoint($event)">
       <GMapMarker
@@ -92,7 +106,7 @@ function iconColor(index) {
         :draggable="true"
         :label="String(m.id)"
         :icon="iconColor(index)"
-        @dragend="updateWeypoint($event, index)"
+        @dragend="updateWaypoint($event, index)"
         @rightclick="removeWaypoint(index)"
         @click="toggleInformationModal($event, index)"
       />
