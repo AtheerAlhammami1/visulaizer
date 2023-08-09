@@ -112,7 +112,7 @@ const numberOfLines = computed(() =>
         :draggable="true"
         :label="String(m.id)"
         :icon="iconColor(index)"
-        @dragend="updateWaypoint($event, index)"
+        @drag="updateWaypoint($event, index)"
         @rightclick="removeWaypoint(index)"
         @click="toggleInformationModal($event, index)"
       />
