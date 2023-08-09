@@ -97,7 +97,13 @@ const numberOfLines = computed(() =>
       id="modal"
       class="w-1/5 h-1/5 absolute z-10 p-5 border-2 border-b-slate-600 opacity-80 bg-base-100"
     ></div>
-    <GMapMap :center="center" :zoom="7" map-type-id="terrain" @click="addWayPoint($event)">
+    <GMapMap
+      :center="center"
+      :zoom="7"
+      map-type-id="terrain"
+      @click="addWayPoint($event)"
+      @dragstart="show = false"
+    >
       <GMapMarker
         :key="index"
         v-for="(m, index) in markersList.markers"
