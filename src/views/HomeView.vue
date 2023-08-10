@@ -26,12 +26,12 @@ function listenToUDPServer() {
  */
 
 function trackRecieved(jsonMessageRecieved) {
-  let track=jsonMessageRecieved;
+  let track = jsonMessageRecieved
   let rowCount = document.getElementById('tableRoutes').rows.length
   markersList.insert(rowCount + 1, track.id, track.latitude, track.longitude)
   center.lat = track.latitude // move map focal point to the new waypoint
   center.lng = track.longitude
-  console.log(jsonMessageRecieved);
+  console.log(jsonMessageRecieved)
 }
 /*
  ** Function to send From vue to UDP Server
@@ -55,10 +55,8 @@ function sendToUDPServer() {
 </script>
 
 <template>
-
-  <main class="flex justify-center w-full h-full">
-      <RouteHistory class="w-1/2 h-full border-2"></RouteHistory>
-      <Map  :center="center"></Map>
+  <main class="flex justify-center w-full h-full" style="height: calc(100% - 97px)">
+    <!-- <RouteHistory class="w-1/2 h-full border-2"></RouteHistory> -->
+    <Map class="w-full" :center="center"></Map>
   </main>
 </template>
-

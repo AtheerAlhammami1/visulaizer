@@ -18,56 +18,47 @@ function addWayPoint(e) {
 
 function updateWaypoint(e, index) {
   const position = { lat: e.latLng.lat(), lng: e.latLng.lng() }
+  updateModalInformationPosition(e.domEvent.x, e.domEvent.y)
   markersList.updateWaypoint(index, position)
 }
 
 function removeWaypoint(index) {
-  markersList.removeWaypoint(index)
   if (lastShowedWayPointIndex == index) {
     show.value = false
     lastShowedWayPointIndex = -1
   } else if (lastShowedWayPointIndex > index) {
     lastShowedWayPointIndex = lastShowedWayPointIndex - 1
-    updateInformationModal(lastShowedWayPointIndex)
   }
+  markersList.removeWaypoint(index)
 }
 
-function updateInformationModal(index) {
-  const modal = document.querySelector('div#modal')
-  const waypoint = markersList.markers[index]
-  modal.innerHTML = `
-  <h5 style="color:inherit;">ID: ${waypoint.id}</h5>
-  <p style="color:inherit;">Lat: ${waypoint.position.lat}</p>
-  <p style="color:inherit;">Lng: ${waypoint.position.lng}</p>
-  `
-}
-
-function toggleInformationModal(e, index) {
+const map = ref()
+let mapProperties
+const waypoint = ref()
+const modalPosition = ref({ left: 0, top: 0 })
+function toggleModalInformation(e, index) {
   if (index == lastShowedWayPointIndex) {
     show.value = false
     lastShowedWayPointIndex = -1
     return
   }
-  const waypoint = markersList.markers[index]
+  waypoint.value = markersList.markers[index]
   lastShowedWayPointIndex = index
   show.value = true
 
-  const modal = document.querySelector('div#modal')
-  const map = document.querySelector('div.vue-map-container')
-  const mapLocation = map.getBoundingClientRect()
+  const mapObject = map.value.$el
+  mapProperties = mapObject.getBoundingClientRect()
 
-  modal.innerHTML = `
-  <h5 style="color:inherit;">ID: ${waypoint.id}</h5>
-  <p style="color:inherit;">Lat: ${waypoint.position.lat}</p>
-  <p style="color:inherit;">Lng: ${waypoint.position.lng}</p>
-  `
+  updateModalInformationPosition(e.domEvent.x, e.domEvent.y)
+}
+function updateModalInformationPosition(xPosition, yPosition) {
+  if (mapProperties) {
+    modalPosition.value.left =
+      xPosition < mapProperties.width / 2
+        ? xPosition + 20 + 'px'
+        : xPosition - (mapProperties.width / 5 + 20) + 'px'
 
-  if (mapLocation.left + mapLocation.width - e.domEvent.x > mapLocation.width / 2) {
-    modal.style.left = e.domEvent.x + 20 + 'px'
-    modal.style.top = e.domEvent.y + 20 + 'px'
-  } else {
-    modal.style.left = e.domEvent.x - (mapLocation.width * 0.4 + 20) + 'px'
-    modal.style.top = e.domEvent.y + 20 + 'px'
+    modalPosition.value.top = yPosition - 60 + 'px'
   }
 }
 
@@ -89,20 +80,47 @@ defineProps({
 const numberOfLines = computed(() =>
   markersList.markers.length == 0 ? 0 : markersList.markers.length - 1
 )
+
+const mapOptions = {
+  mapTypeControl: false
+}
 </script>
 <template>
-  <main class="w-1/2 h-full border-2">
+  <main class="border-2 relative">
+    <div class="w-1/5 h-1/2 absolute z-10 bg-base-100">
+      <div class="h-1/2 border-b-2 border-r overflow-y-auto">
+        <div class="flex justify-between border-b p-2">
+          Friend Entity
+          <font-awesome-icon class="px-1 pt-1 text-xl cursor-pointer" :icon="['fas', 'plus']" />
+        </div>
+      </div>
+      <div class="h-1/2 border-b border-r overflow-y-auto border-b-2">
+        <div class="flex justify-between border-b p-2">
+          Hostile Entity
+          <font-awesome-icon class="px-1 pt-1 text-xl cursor-pointer" :icon="['fas', 'plus']" />
+        </div>
+      </div>
+    </div>
     <div
+      class="w-1/5 h-1/5 absolute z-10 p-5 border-2 opacity-80 bg-base-100"
+      :style="{ left: modalPosition.left, top: modalPosition.top }"
       v-show="show"
       id="modal"
-      class="w-1/5 h-1/5 absolute z-10 p-5 border-2 border-b-slate-600 opacity-80 bg-base-100"
-    ></div>
+      @click="show = false"
+    >
+      <h5>ID: {{ waypoint?.id }}</h5>
+      <p>Lat: {{ waypoint?.position.lat }}</p>
+      <p>Lng: {{ waypoint?.position.lng }}</p>
+    </div>
     <GMapMap
+      ref="map"
       :center="center"
       :zoom="7"
       map-type-id="terrain"
       @click="addWayPoint($event)"
       @dragstart="show = false"
+      @bounds_changed="show = false"
+      :options="mapOptions"
     >
       <GMapMarker
         :key="index"
@@ -114,7 +132,7 @@ const numberOfLines = computed(() =>
         :icon="iconColor(index)"
         @drag="updateWaypoint($event, index)"
         @rightclick="removeWaypoint(index)"
-        @click="toggleInformationModal($event, index)"
+        @click="toggleModalInformation($event, index)"
       />
       <GMapPolyline
         :key="index"

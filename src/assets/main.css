@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-#app{
-    height:100vh
+#app {
+  height: 100vh;
+}
+.gm-fullscreen-control {
+  display: none !important;
 }
