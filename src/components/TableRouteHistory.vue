@@ -22,7 +22,7 @@ let markersList = useMarkersStore() // to access waypoints array across pages
               <th>long</th>
             </thead>
             <tbody>
-              <tr v-for="(route, index) in markersList.markers" :key="index">
+              <tr v-for="(route, index) in markersList.selectedEntityWaypoint" :key="index">
                 <td>{{ index }}</td>
                 <td>{{ route.id }}</td>
                 <td>{{ route.position.lat }}</td>

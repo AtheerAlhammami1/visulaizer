@@ -1,42 +1,40 @@
-import './assets/main.css'
-
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
-import App from './App.vue'
-import router from './router'
 import VueGoogleMaps from '@fawmi/vue-google-maps'
-import axios from 'axios';
+import axios from 'axios'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
 import VueAxios from 'vue-axios'
+import App from './App.vue'
+import './assets/main.css'
+import router from './router'
 // Install Icons
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
-library.add(faUserSecret)
-//
-import PrimeVue from 'primevue/config';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+// Prime Vue
+import Column from 'primevue/column'
+import PrimeVue from 'primevue/config'
+import DataTable from 'primevue/datatable'
+import 'primevue/resources/themes/lara-light-blue/theme.css'
+import Row from 'primevue/row'
 
 const app = createApp(App)
 
 app.use(createPinia())
-app.use(router);
-app.use(VueAxios, axios);
-
+app.use(router)
+app.use(VueAxios, axios)
 app.use(VueGoogleMaps, {
-    load: {
-        key: 'AIzaSyDjWa3GrFd2X5htH4dC_VW_RHZKHLfNvUs',
-    },
-});
-app.provide("axios", app.config.globalProperties.axios);
+  load: {
+    key: 'AIzaSyCZjfteF_1sszSegUV17oLnWqvZPXRvuPQ'
+  }
+})
+app.provide('axios', app.config.globalProperties.axios)
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.use(PrimeVue)
+library.add(faUserSecret)
+
 // Prime Vue
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Row from 'primevue/row';
-app.component("DataTable",DataTable)
-app.component("Column",Column)
-app.component("Row",Row)
-//
+app.use(PrimeVue)
+app.component('DataTable', DataTable)
+app.component('Column', Column)
+app.component('Row', Row)
 
 app.mount('#app')
