@@ -1,73 +1,50 @@
 <script setup>
 import EntitySidePanel from './EntitySidePanel.vue'
 import { useMarkersStore } from '../stores/useMarkers'
-import { inject, onMounted } from 'vue'
+import { inject, markRaw, onMounted } from 'vue'
 import { io } from 'socket.io-client'
-const socket = io('http://127.0.0.1:3000')
+const socket = io('http://localhost:3000')
 onMounted(() => {
   listenToUDPServer()
 })
-/*
- ** Function to act upon recieving udp messages
- */
+
 const markersList = useMarkersStore()
 
 function listenToUDPServer() {
   socket.on('udp-message', (message) => {
-    console.log(message)
+    if (String(message).charAt(0) == '{') {
+      const entity = JSON.parse(message)
+      markersList.movingEntity = {
+        position: {
+          lat: entity.latitude,
+          lng: entity.longitude
+        }
+      }
+    } else {
+      markersList.movingEntity = null
+    }
   })
 }
 
 const axios = inject('axios')
 async function sendEntity() {
-  let entity =
-    markersList.entitySide == 'Friend'
-      ? JSON.stringify(markersList.friendEntities[markersList.selectedEntityIndex])
-      : JSON.stringify(markersList.hostileEntities[markersList.selectedEntityIndex])
-
-  entity = {
+  let entity = {
     name: 'testing',
     sidc: '1003000',
     scenarioId: 1,
     parentId: 1,
-    waypoints: [
-      {
-        latitude: 20,
-        longitude: 23,
-        altitude: 20.0,
-        entityRouteId: 5
-      },
-      {
-        latitude: 20.5,
-        longitude: 24.5,
-        altitude: 20.0,
-        entityRouteId: 5
-      },
-      {
-        latitude: 22,
-        longitude: 25,
-        altitude: 20.0,
-        entityRouteId: 5
-      },
-      {
-        latitude: 23,
-        longitude: 26,
-        altitude: 20.0,
-        entityRouteId: 5
-      },
-      {
-        latitude: 24,
-        longitude: 27,
-        altitude: 20.0,
-        entityRouteId: 5
-      }
-    ]
+    waypoints: []
+  }
+  for (const waypoint of markersList.selectedEntityWaypoint) {
+    entity.waypoints.push({
+      latitude: waypoint.position.lat,
+      longitude: waypoint.position.lng,
+      altitude: 20.0,
+      entityRouteId: 5
+    })
   }
 
-  // const response = await axios.get('http://localhost:8080/EntityRoute/simulate', entity)
-  // const response = await axios.get('http://localhost:8080/EntityRoute/getAllByScenarioId/1')
-  const response = axios.post('http://localhost:8080/EntityRoute/simulate', entity)
-  console.log(response)
+  axios.post('http://localhost:8080/EntityRoute/simulate', entity)
 }
 </script>
 <template>

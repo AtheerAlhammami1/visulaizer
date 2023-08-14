@@ -9,7 +9,8 @@ export let useMarkersStore = defineStore('markersStore', {
       hostileEntities: [],
       selectedEntityIndex: -1,
       selectedEntityWaypoint: [],
-      entitySide: ''
+      entitySide: '',
+      movingEntity: null
       /*    0                      1
       {                         {
         id:1,                    id:2,    

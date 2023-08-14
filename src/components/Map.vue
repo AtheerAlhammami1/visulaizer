@@ -110,6 +110,19 @@ const mapOptions = {
       :options="mapOptions"
     >
       <GMapMarker
+        v-if="markersList.movingEntity != null"
+        :position="markersList.movingEntity.position"
+        :clickable="true"
+        :draggable="true"
+        :icon="
+          markersList.entitySide == 'Friend'
+            ? 'src/assets/images/FriendEntity.svg'
+            : 'src/assets/images/HostileEntity.svg'
+        "
+      />
+
+      <GMapMarker
+        v-if="markersList.movingEntity == null"
         :key="index"
         v-for="(waypoint, index) in markersList.selectedEntityWaypoint"
         :position="waypoint.position"
@@ -122,6 +135,7 @@ const mapOptions = {
         @click="toggleInformationModal($event, index)"
       />
       <GMapPolyline
+        v-if="markersList.movingEntity == null"
         :key="index"
         v-for="(m, index) in numberOfLines"
         :path="[
