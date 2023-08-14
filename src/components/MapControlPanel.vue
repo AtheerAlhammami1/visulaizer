@@ -10,14 +10,14 @@ onMounted(() => {
 /*
  ** Function to act upon recieving udp messages
  */
+const markersList = useMarkersStore()
 
 function listenToUDPServer() {
   socket.on('udp-message', (message) => {
-    console.error(message)
+    console.log(message)
   })
 }
 
-const markersList = useMarkersStore()
 const axios = inject('axios')
 async function sendEntity() {
   let entity =
@@ -67,7 +67,7 @@ async function sendEntity() {
   // const response = await axios.get('http://localhost:8080/EntityRoute/simulate', entity)
   // const response = await axios.get('http://localhost:8080/EntityRoute/getAllByScenarioId/1')
   const response = axios.post('http://localhost:8080/EntityRoute/simulate', entity)
-  console.error(response)
+  console.log(response)
 }
 </script>
 <template>
