@@ -110,8 +110,10 @@ const mapOptions = {
       :options="mapOptions"
     >
       <GMapMarker
-        v-if="markersList.movingEntity != null"
-        :position="markersList.movingEntity.position"
+        v-if="markersList.movingEntity.length != 0"
+        :key="index"
+        v-for="(entity, index) in markersList.movingEntity"
+        :position="entity.position"
         :clickable="true"
         :draggable="true"
         :icon="
@@ -122,7 +124,7 @@ const mapOptions = {
       />
 
       <GMapMarker
-        v-if="markersList.movingEntity == null"
+        v-if="markersList.movingEntity.length == 0"
         :key="index"
         v-for="(waypoint, index) in markersList.selectedEntityWaypoint"
         :position="waypoint.position"
@@ -135,7 +137,7 @@ const mapOptions = {
         @click="toggleInformationModal($event, index)"
       />
       <GMapPolyline
-        v-if="markersList.movingEntity == null"
+        v-if="markersList.movingEntity.length == 0"
         :key="index"
         v-for="(m, index) in numberOfLines"
         :path="[

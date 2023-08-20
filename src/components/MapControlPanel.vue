@@ -13,38 +13,59 @@ const markersList = useMarkersStore()
 function listenToUDPServer() {
   socket.on('udp-message', (message) => {
     if (String(message).charAt(0) == '{') {
-      const entity = JSON.parse(message)
-      markersList.movingEntity = {
-        position: {
-          lat: entity.latitude,
-          lng: entity.longitude
+      const newWaypoint = JSON.parse(message)
+
+      const index = markersList.movingEntity.findIndex(
+        (waypoint) => waypoint.entityRouteId == newWaypoint.entityRouteId
+      )
+
+      if (index == -1) {
+        markersList.movingEntity.push({
+          entityRouteId: newWaypoint.entityRouteId,
+          position: {
+            lat: newWaypoint.latitude,
+            lng: newWaypoint.longitude
+          }
+        })
+      } else if (index != -1) {
+        markersList.movingEntity[index] = {
+          entityRouteId: newWaypoint.entityRouteId,
+          position: {
+            lat: newWaypoint.latitude,
+            lng: newWaypoint.longitude
+          }
         }
       }
     } else {
-      markersList.movingEntity = null
+      markersList.movingEntity = []
     }
   })
 }
 
 const axios = inject('axios')
 async function sendEntity() {
-  let entity = {
-    name: 'testing',
-    sidc: '1003000',
-    scenarioId: 1,
-    parentId: 1,
-    waypoints: []
-  }
-  for (const waypoint of markersList.selectedEntityWaypoint) {
-    entity.waypoints.push({
-      latitude: waypoint.position.lat,
-      longitude: waypoint.position.lng,
-      altitude: 20.0,
-      entityRouteId: 5
+  const entities = [...markersList.friendEntities, ...markersList.hostileEntities]
+  const payload = []
+  for (const entity of entities) {
+    const newWaypoint = []
+
+    for (const waypoint of entity.waypoint) {
+      newWaypoint.push({
+        latitude: waypoint.position.lat,
+        longitude: waypoint.position.lng,
+        altitude: 1.0
+      })
+    }
+    payload.push({
+      id: entity.id,
+      name: entity.name,
+      sidc: entity.SIDC,
+      scenarioId: entity.scenarioId,
+      parentId: entity.parentId,
+      waypoints: newWaypoint
     })
   }
-
-  axios.post('http://localhost:8080/EntityRoute/simulate', entity)
+  axios.post('http://localhost:8080/EntityRoute/simulate', payload)
 }
 </script>
 <template>

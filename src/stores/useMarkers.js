@@ -10,7 +10,7 @@ export let useMarkersStore = defineStore('markersStore', {
       selectedEntityIndex: -1,
       selectedEntityWaypoint: [],
       entitySide: '',
-      movingEntity: null
+      movingEntity: []
       /*    0                      1
       {                         {
         id:1,                    id:2,    
@@ -93,12 +93,14 @@ export let useMarkersStore = defineStore('markersStore', {
       this.selectedEntityWaypoint = []
     },
     addWaypoint(position) {
-      this.selectedEntityWaypoint.push({
-        id: this.id,
-        order: this.selectedEntityWaypoint.length + 1,
-        position: position
-      })
-      this.id = this.id + 1
+      if (this.movingEntity.length == 0) {
+        this.selectedEntityWaypoint.push({
+          id: this.id,
+          order: this.selectedEntityWaypoint.length + 1,
+          position: position
+        })
+        this.id = this.id + 1
+      }
     },
     removeWaypoint(index) {
       this.selectedEntityWaypoint.splice(index, 1)
