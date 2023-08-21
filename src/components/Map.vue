@@ -87,7 +87,11 @@ const numberOfLines = computed(() =>
 )
 
 const mapOptions = {
-  mapTypeControl: false
+  mapTypeControl: false,
+  zoomControl : false,
+  streetViewControl: false,
+
+
 }
 </script>
 <template>
@@ -103,7 +107,7 @@ const mapOptions = {
       ref="map"
       :center="center"
       :zoom="7"
-      map-type-id="terrain"
+      map-type-id="hybrid"
       @click="addWayPoint($event)"
       @dragstart="showWaypointInformationModal = false"
       @bounds_changed="showWaypointInformationModal = false"

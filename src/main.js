@@ -24,7 +24,7 @@ app.use(router)
 app.use(VueAxios, axios)
 app.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyCZjfteF_1sszSegUV17oLnWqvZPXRvuPQ'
+    key: 'AIzaSyCIog63DvS6W2p-fhSWYFzNvDvqYFvUBPg'
   }
 })
 app.provide('axios', app.config.globalProperties.axios)

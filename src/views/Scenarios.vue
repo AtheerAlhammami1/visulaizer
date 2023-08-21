@@ -5,7 +5,9 @@ import InputText from "@/components/Inputs/InputText.vue";
 import DropDown from "@/components/Inputs/DropDown.vue";
 import Modal from "@/components/Modal.vue";
 import milsymbol from "milsymbol";
-import { ref} from 'vue';
+import {inject, ref} from 'vue';
+import CloseButton from "@/components/Buttons/IconCloseButton.vue";
+const axios = inject('axios')
 
 
 const table_Data   = [
@@ -131,12 +133,21 @@ function printNatoSymbologyGenerator(){
 }
 const table_Column = ['Scenario Name' , 'Number of entities' , 'Number of waypoint' , 'Duration' ,'Action']
 
+const scenario= ref({
+  "name" : "",
+  "duration" : ""
+})
+
+function createScenario(){
+  console.error(scenario.value)
+ axios.post("http://localhost:8080/Scenario/create" ,scenario.value )
+}
 </script>
 
 
 
 <template>
-
+<!-- Start Scenario Table -->
   <div class="overflow-x-auto">
     <table class="table">
       <!-- head -->
@@ -166,32 +177,35 @@ const table_Column = ['Scenario Name' , 'Number of entities' , 'Number of waypoi
       </tbody>
     </table>
   </div>
+  <!-- End Scenario Table -->
 
 
   <button class="btn btn-block flex justify-center"   onclick="my_modal_1.showModal()"> Add Scenario</button>
 
+<!-- Start Create Scenario Dialog-->
+  <dialog id="my_modal_1" class="modal">
+    <form method="dialog" class="modal-box p-8 w-fit h-25" >
+      <CloseButton/>
+      <h3 class="font-bold text-lg mb-2">Create Scenario</h3>
+      <InputText  v-model="scenario.name"    label="Scenario Name" placeHolder="Enter Scenario name"/>
+      <InputText  v-model="scenario.duration"  value="scenarioDuration" label="Scenario Duration" placeHolder="Enter Scenario Duration"/>
+      <div class="modal-action flex justify-center">
+        <!-- if there is a button in form, it will close the modal -->
+        <button class="btn btn-wide" @click="createScenario()">Create Scenario</button>
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+  <!-- End Create Scenario Dialog-->
 
 
 
-  <Modal modalId="my_modal_1" modalTitle="Create Scenario" SubmitText="Next" Event="my_modal_2.showModal()" :Progress="1" >
-    <InputText  label="Scenario Name" placeHolder="Enter Scenario name"/>
-  </Modal>
 
 
 
-  <Modal  modalId="my_modal_2" modalTitle="Create Entity" SubmitText="Next" Event="my_modal_3.showModal()" :Progress="2">
-    <InputText label="Entity Name" placeHolder="Enter Entity name"/>
-    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityType" :Options="entityType" label="Entity Type" placeHolder="Pick One" />
-    <DropDown @click="natoSymbologyGenerator" v-model="selectedEntityClassification"  :Options="entityClassification" label="Entity Classification" placeHolder="Chose One" />
-    <div class="flex flex justify-center mt-5">
-      <canvas ref="iconCanvas"/>
-    </div>
-    <p class="text-center mt-5"> Nato SIDC : {{natoSIDC}}</p>
-  </Modal>
 
-  <Modal modalId="my_modal_3" modalTitle="Create s" SubmitText="s" :Progress="3">
-    <InputText label="s Name" placeHolder="Enter s name"/>
-  </Modal>
 </template>
 
 
