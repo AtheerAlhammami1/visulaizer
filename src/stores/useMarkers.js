@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export let useMarkersStore = defineStore('markersStore', {
   state() {
     return {
+      scenarioId: -1,
       entityNumber: 1,
       id: 1,
       friendEntities: [],
@@ -11,33 +12,6 @@ export let useMarkersStore = defineStore('markersStore', {
       selectedEntityWaypoint: [],
       entitySide: '',
       movingEntity: []
-      /*    0                      1
-      {                         {
-        id:1,                    id:2,    
-        name:"Entity1",          name:"Entity2",
-        parentId:0,              parentId:1,
-        SIDC:0,                  SIDC:0,
-        scenarioId:1,            scenarioId:1,
-        waypoint:[               waypoint:[
-          {                      {
-          id:1,                  id:3,
-          order:1,               order:1,
-          position:{             position:{
-            lat:10,              lat:10,
-            lng:10               lng:10,
-          }                     }
-        },                     ]
-         {                    }
-          id:2,
-          order:2,
-          position:{
-            lat:10,
-            lng:10
-          }
-        }
-        ]
-      }
-      */
     }
   },
   actions: {
