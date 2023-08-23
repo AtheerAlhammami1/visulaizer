@@ -35,7 +35,7 @@ export let useMarkersStore = defineStore('markersStore', {
       }
       this.entitySide = side
     },
-    addEntity(name, parentId, SIDC, scenarioId) {
+    addEntity(name, parentId, SIDC, scenarioId, entityMode) {
       const entitySide = SIDC.slice(3, 4)
       if (entitySide == 3) {
         this.friendEntities.push({
@@ -44,6 +44,7 @@ export let useMarkersStore = defineStore('markersStore', {
           parentId: parentId,
           SIDC: SIDC,
           scenarioId: scenarioId,
+          mode: entityMode,
           waypoint: []
         })
       } else if (entitySide == 6) {
@@ -53,6 +54,7 @@ export let useMarkersStore = defineStore('markersStore', {
           parentId: parentId,
           SIDC: SIDC,
           scenarioId: scenarioId,
+          mode: entityMode,
           waypoint: []
         })
       }

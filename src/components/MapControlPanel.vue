@@ -63,6 +63,7 @@ async function sendEntity() {
       sidc: entity.SIDC,
       scenarioId: entity.scenarioId,
       parentId: entity.parentId,
+      mode: entity.mode,
       waypoints: newWaypoint
     })
   }

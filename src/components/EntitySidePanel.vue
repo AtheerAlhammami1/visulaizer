@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useMarkersStore } from '../stores/useMarkers'
 import CloseButton from '@/components/Buttons/IconCloseButton.vue'
 import milsymbol from 'milsymbol'
@@ -9,50 +9,6 @@ const prop = defineProps({
   icon: String,
   isHostile: 1 | 0
 })
-
-const markersList = useMarkersStore()
-const showContextMenu = ref(false)
-
-function selectEntity(entityIndex, side) {
-  showContextMenu.value = false
-  markersList.selectEntity(entityIndex, side)
-}
-
-function addEntity(name, parentId, SIDC, scenarioId) {
-  modal.value.open = false
-  markersList.addEntity(name, parentId, SIDC, scenarioId)
-}
-
-function removeEntity(index, panelName) {
-  markersList.removeEntity(index, panelName)
-  showContextMenu.value = false
-}
-
-const contextMenuPosition = ref({ left: 0, top: 0 })
-const contextMenuIndex = ref(-1)
-function ToggleContextMenu(e, index) {
-  showContextMenu.value = true
-  contextMenuIndex.value = index
-  contextMenuPosition.value.left = e.x + 20 + 'px'
-  contextMenuPosition.value.top = e.y + 20 + 'px'
-}
-
-const modal = ref()
-const iconCanvas = ref()
-const canvasContext = ref('')
-onMounted(() => {
-  iconCanvas.value.width = 160
-  iconCanvas.value.height = 160
-  canvasContext.value = iconCanvas.value.getContext('2d')
-})
-
-const formValues = ref({})
-const natoSIDC = ref()
-function openModal() {
-  formValues.value = { EntityName: '', EntityType: 'Select Entity Type' }
-  modal.value.open = true
-  canvasContext.value.clearRect(0, 0, iconCanvas.width, iconCanvas.height)
-}
 
 const entityTypes = [
   {
@@ -69,6 +25,72 @@ const entityTypes = [
   }
 ]
 
+const entityModes = [
+  {
+    name: 'Normal Route',
+    value: 0
+  },
+  {
+    name: 'Patrol',
+    value: 1
+  }
+]
+
+const markersList = useMarkersStore()
+const showContextMenu = ref(false)
+
+const contextMenuPosition = ref({ left: 0, top: 0 })
+const contextMenuIndex = ref(-1)
+function ToggleContextMenu(e, index) {
+  showContextMenu.value = true
+  contextMenuIndex.value = index
+  contextMenuPosition.value.left = e.x + 20 + 'px'
+  contextMenuPosition.value.top = e.y + 20 + 'px'
+}
+
+function selectEntity(entityIndex, side) {
+  showContextMenu.value = false
+  markersList.selectEntity(entityIndex, side)
+}
+
+function removeEntity(index, panelName) {
+  markersList.removeEntity(index, panelName)
+  showContextMenu.value = false
+}
+
+const iconCanvas = ref()
+const canvasContext = ref('')
+onMounted(() => {
+  iconCanvas.value.width = 160
+  iconCanvas.value.height = 160
+  canvasContext.value = iconCanvas.value.getContext('2d')
+})
+const modal = ref()
+const formValues = ref({})
+function addEntity(name, parentId, SIDC, scenarioId, entityMode) {
+  if (
+    formValues.value.EntityName != '' &&
+    formValues.value.EntityType != 'Select Entity Type' &&
+    formValues.value.EntityMode != 'Select Entity Mode'
+  ) {
+    modal.value.open = false
+    markersList.addEntity(name, parentId, SIDC, scenarioId, entityMode)
+  } else {
+    modal.value.open = true
+    alert('Please complete the form')
+  }
+}
+function openModal() {
+  modal.value.open = true
+  formValues.value = {
+    EntityName: '',
+    EntityType: 'Select Entity Type',
+    EntityMode: 'Select Entity Mode'
+  }
+  canvasContext.value.clearRect(0, 0, iconCanvas.value.width, iconCanvas.value.height)
+  natoSIDC.value = ''
+}
+
 function setNatoClassification(SIDC, Num) {
   return SIDC.slice(0, 3) + Num + SIDC.slice(3 + Num.length)
 }
@@ -76,6 +98,7 @@ function setNatoType(SIDC, Num) {
   return SIDC.slice(0, 10) + Num + SIDC.slice(10 + Num.length)
 }
 
+const natoSIDC = ref()
 function natoSymbologyGenerator() {
   let tempSIDC = '300310000012110000000'
   tempSIDC = setNatoClassification(tempSIDC, prop.panelName == 'Friend' ? '3' : '6')
@@ -181,6 +204,19 @@ function natoSymbologyGenerator() {
           </option>
         </select>
       </div>
+      <div class="form-control w-full max-w-xs">
+        <label class="label"> Entity Mode </label>
+        <select v-model="formValues.EntityMode" class="select select-bordered">
+          <option disabled>Select Entity Mode</option>
+          <option
+            v-for="entityMode in entityModes"
+            :key="entityMode.value"
+            :value="entityMode.value"
+          >
+            {{ entityMode.name }}
+          </option>
+        </select>
+      </div>
       <div class="flex justify-center mt-5">
         <canvas ref="iconCanvas" />
       </div>
@@ -188,7 +224,15 @@ function natoSymbologyGenerator() {
       <div class="modal-action flex justify-center">
         <button
           class="btn btn-wide"
-          @click="addEntity(formValues.EntityName, 0, natoSIDC, markersList.scenarioId)"
+          @click.prevent="
+            addEntity(
+              formValues.EntityName,
+              0,
+              natoSIDC,
+              markersList.scenarioId,
+              formValues.EntityMode
+            )
+          "
         >
           Create Entity
         </button>

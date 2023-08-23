@@ -13,42 +13,6 @@ onMounted(async () => {
   table_Data.value = scenarios.data
 })
 
-const entityClassification = [
-  {
-    name: 'Pending',
-    SIDC: '0'
-  },
-  {
-    name: 'Unknown',
-    SIDC: '1'
-  },
-  {
-    name: 'Assumed Friend',
-    SIDC: '2'
-  },
-  {
-    name: 'Friend',
-    SIDC: '3'
-  },
-  {
-    name: 'Natural',
-    SIDC: '4'
-  },
-  {
-    name: 'Subsect/Joker',
-    SIDC: '5'
-  },
-  {
-    name: 'Hostile/Faker',
-    SIDC: '6'
-  }
-]
-
-function getSIDC(entityArray, name) {
-  const entity = entityArray.find((entity) => entity.name === name)
-  return entity ? entity.SIDC : null //change
-}
-
 const table_Column = ['Scenario Name', 'Duration', 'Action']
 
 const scenario = ref({
@@ -61,7 +25,7 @@ async function createScenario() {
     const scenarios = await axios.get('http://localhost:8080/Scenario/getAll')
     table_Data.value = scenarios.data
   } else {
-    alert('incomplete Information')
+    alert('Please complete the form')
   }
 }
 </script>
