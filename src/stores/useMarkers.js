@@ -36,19 +36,20 @@ export let useMarkersStore = defineStore('markersStore', {
       this.entitySide = side
     },
     addEntity(name, parentId, SIDC, scenarioId) {
-      if (SIDC == 0) {
+      const entitySide = SIDC.slice(3, 4)
+      if (entitySide == 3) {
         this.friendEntities.push({
           id: this.entityNumber,
-          name: name + this.entityNumber,
+          name: name,
           parentId: parentId,
           SIDC: SIDC,
           scenarioId: scenarioId,
           waypoint: []
         })
-      } else if (SIDC == 1) {
+      } else if (entitySide == 6) {
         this.hostileEntities.push({
           id: this.entityNumber,
-          name: name + this.entityNumber,
+          name: name,
           parentId: parentId,
           SIDC: SIDC,
           scenarioId: scenarioId,

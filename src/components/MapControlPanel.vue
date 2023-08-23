@@ -14,7 +14,6 @@ function listenToUDPServer() {
   socket.on('udp-message', (message) => {
     if (String(message).charAt(0) == '{') {
       const newWaypoint = JSON.parse(message)
-
       const index = markersList.movingEntity.findIndex(
         (waypoint) => waypoint.entityRouteId == newWaypoint.entityRouteId
       )
@@ -22,6 +21,7 @@ function listenToUDPServer() {
       if (index == -1) {
         markersList.movingEntity.push({
           entityRouteId: newWaypoint.entityRouteId,
+          SIDC: newWaypoint.sidc,
           position: {
             lat: newWaypoint.latitude,
             lng: newWaypoint.longitude
@@ -30,6 +30,7 @@ function listenToUDPServer() {
       } else if (index != -1) {
         markersList.movingEntity[index] = {
           entityRouteId: newWaypoint.entityRouteId,
+          SIDC: newWaypoint.sidc,
           position: {
             lat: newWaypoint.latitude,
             lng: newWaypoint.longitude

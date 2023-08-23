@@ -88,10 +88,8 @@ const numberOfLines = computed(() =>
 
 const mapOptions = {
   mapTypeControl: false,
-  zoomControl : false,
-  streetViewControl: false,
-
-
+  zoomControl: false,
+  streetViewControl: false
 }
 </script>
 <template>
@@ -113,49 +111,47 @@ const mapOptions = {
       @bounds_changed="showWaypointInformationModal = false"
       :options="mapOptions"
     >
-      <GMapMarker
-        v-if="markersList.movingEntity.length != 0"
-        :key="index"
-        v-for="(entity, index) in markersList.movingEntity"
-        :position="entity.position"
-        :clickable="true"
-        :draggable="true"
-        :icon="
-          markersList.entitySide == 'Friend'
-            ? 'src/assets/images/FriendEntity.svg'
-            : 'src/assets/images/HostileEntity.svg'
-        "
-      />
+      <div v-if="markersList.movingEntity.length != 0">
+        <GMapMarker
+          :key="index"
+          v-for="(entity, index) in markersList.movingEntity"
+          :position="entity.position"
+          :clickable="true"
+          :draggable="true"
+          :icon="'src/assets/images/' + entity.SIDC + '.svg'"
+        />
+      </div>
 
-      <GMapMarker
-        v-if="markersList.movingEntity.length == 0"
-        :key="index"
-        v-for="(waypoint, index) in markersList.selectedEntityWaypoint"
-        :position="waypoint.position"
-        :clickable="true"
-        :draggable="true"
-        :label="String(waypoint.order)"
-        :icon="waypointColor(index)"
-        @drag="updateWaypoint($event, index)"
-        @rightclick="removeWaypoint(index)"
-        @click="toggleInformationModal($event, index)"
-      />
-      <GMapPolyline
-        v-if="markersList.movingEntity.length == 0"
-        :key="index"
-        v-for="(m, index) in numberOfLines"
-        :path="[
-          {
-            lat: markersList.selectedEntityWaypoint[index]?.position.lat,
-            lng: markersList.selectedEntityWaypoint[index]?.position.lng
-          },
-          {
-            lat: markersList.selectedEntityWaypoint[index + 1]?.position.lat,
-            lng: markersList.selectedEntityWaypoint[index + 1]?.position.lng
-          }
-        ]"
-      />
-      <GMapPolyline />
+      <div v-if="markersList.movingEntity.length == 0">
+        <GMapMarker
+          :key="index"
+          v-for="(waypoint, index) in markersList.selectedEntityWaypoint"
+          :position="waypoint.position"
+          :clickable="true"
+          :draggable="true"
+          :label="String(waypoint.order)"
+          :icon="waypointColor(index)"
+          @drag="updateWaypoint($event, index)"
+          @rightclick="removeWaypoint(index)"
+          @click="toggleInformationModal($event, index)"
+        />
+      </div>
+      <div v-if="markersList.movingEntity.length == 0">
+        <GMapPolyline
+          :key="index"
+          v-for="(m, index) in numberOfLines"
+          :path="[
+            {
+              lat: markersList.selectedEntityWaypoint[index]?.position.lat,
+              lng: markersList.selectedEntityWaypoint[index]?.position.lng
+            },
+            {
+              lat: markersList.selectedEntityWaypoint[index + 1]?.position.lat,
+              lng: markersList.selectedEntityWaypoint[index + 1]?.position.lng
+            }
+          ]"
+        />
+      </div>
     </GMapMap>
   </main>
 </template>
