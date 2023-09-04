@@ -20,7 +20,7 @@ const scenario = ref({
   duration: ''
 })
 async function createScenario() {
-  if (scenario.name?.length > 0 && scenario.duration?.length > 0) {
+  if (scenario.value.name?.length > 0 && scenario.value.duration?.length > 0) {
     await axios.post('http://localhost:8080/Scenario/create', scenario.value)
     const scenarios = await axios.get('http://localhost:8080/Scenario/getAll')
     table_Data.value = scenarios.data
