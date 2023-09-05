@@ -1,8 +1,8 @@
 <script setup>
-import EntitySidePanel from './EntitySidePanel.vue'
-import { useMarkersStore } from '../stores/useMarkers'
-import { inject, markRaw, onMounted } from 'vue'
 import { io } from 'socket.io-client'
+import { inject, onMounted } from 'vue'
+import { useMarkersStore } from '../stores/useMarkers'
+import EntitySidePanel from './EntitySidePanel.vue'
 const socket = io('http://localhost:3000')
 onMounted(() => {
   listenToUDPServer()
@@ -64,6 +64,7 @@ async function sendEntity() {
       scenarioId: entity.scenarioId,
       parentId: entity.parentId,
       mode: entity.mode,
+      startTime: entity.startTime,
       waypoints: newWaypoint
     })
   }

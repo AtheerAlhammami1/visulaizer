@@ -1,7 +1,7 @@
 <script setup>
 import CloseButton from '@/components/Buttons/IconCloseButton.vue'
-import { onMounted, ref } from 'vue'
 import milsymbol from 'milsymbol'
+import { onMounted, ref } from 'vue'
 import { useMarkersStore } from '../stores/useMarkers'
 
 const markersList = useMarkersStore()
@@ -9,7 +9,12 @@ const markersList = useMarkersStore()
 const props = defineProps({
   panelName: String
 })
-const formValues = ref({})
+const formValues = ref({
+  EntityName: '',
+  EntityType: 'Select Entity Type',
+  EntityMode: 'Select Entity Mode',
+  EntityStartTime: null
+})
 const iconCanvas = ref()
 const canvasContext = ref('')
 onMounted(() => {
@@ -43,18 +48,20 @@ const entityTypes = [
   }
 ]
 const natoSIDC = ref()
-function addEntity(name, parentId, SIDC, scenarioId, entityMode) {
+function addEntity(name, parentId, SIDC, scenarioId, entityMode, startTime) {
   if (
     formValues.value.EntityName != '' &&
     formValues.value.EntityType != 'Select Entity Type' &&
-    formValues.value.EntityMode != 'Select Entity Mode'
+    formValues.value.EntityMode != 'Select Entity Mode' &&
+    formValues.value.EntityName != -1
   ) {
     modal.value.open = false
-    markersList.addEntity(name, parentId, SIDC, scenarioId, entityMode)
+    markersList.addEntity(name, parentId, SIDC, scenarioId, entityMode, startTime)
     formValues.value = {
       EntityName: '',
       EntityType: 'Select Entity Type',
-      EntityMode: 'Select Entity Mode'
+      EntityMode: 'Select Entity Mode',
+      EntityStartTime: null
     }
     natoSIDC.value = ''
     canvasContext.value.clearRect(0, 0, iconCanvas.value.width, iconCanvas.value.height)
@@ -135,6 +142,15 @@ const modal = ref()
           </option>
         </select>
       </div>
+      <div class="form-control w-full max-w-xs">
+        <label class="label"> Entity Start time </label>
+        <input
+          v-model="formValues.EntityStartTime"
+          type="number"
+          placeholder="Entity Start time"
+          class="input input-bordered w-full max-w-xs"
+        />
+      </div>
       <div class="flex justify-center mt-5">
         <canvas ref="iconCanvas" />
       </div>
@@ -148,7 +164,8 @@ const modal = ref()
               0,
               natoSIDC,
               markersList.scenarioId,
-              formValues.EntityMode
+              formValues.EntityMode,
+              formValues.EntityStartTime
             )
           "
         >
@@ -158,3 +175,13 @@ const modal = ref()
     </form>
   </dialog>
 </template>
+<style scoped>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+</style>
