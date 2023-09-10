@@ -42,7 +42,33 @@ function listenToUDPServer() {
     }
   })
   socket.on('udp-incidentReportMessage', (message) => {
-    console.log(" I got a report"+message);
+    console.log(' I got a report' + message)
+    if (String(message).charAt(0) == '{') {
+      const newReport = JSON.parse(message)
+      const index = markersList.indicatorMarks.findIndex(
+        (report) => report.enemyId == newReport.enemyId
+      )
+
+      if (index == -1) {
+        markersList.indicatorMarks.push({
+          enemyId: newReport.enemyId,
+          position: {
+            lat: newReport.enemyLatitude + 0.25,
+            lng: newReport.enemyLongitude + 0.25
+          }
+        })
+      } else if (index != -1) {
+        markersList.indicatorMarks[index] = {
+          enemyId: newReport.enemyId,
+          position: {
+            lat: newReport.enemyLatitude + 0.25,
+            lng: newReport.enemyLongitude + 0.25
+          }
+        }
+      }
+    } else {
+      markersList.indicatorMarks = []
+    }
   })
 }
 
@@ -68,6 +94,7 @@ async function sendEntity() {
       parentId: entity.parentId,
       mode: entity.mode,
       startTime: entity.startTime,
+      detectionRange: entity.detectionRange,
       waypoints: newWaypoint
     })
   }

@@ -112,9 +112,13 @@ const mapOptions = {
           :key="index"
           v-for="(entity, index) in markersList.movingEntity"
           :position="entity.position"
-          :clickable="true"
-          :draggable="true"
           :icon="'src/assets/images/' + entity.SIDC + '.svg'"
+        />
+        <GMapMarker
+          :key="index"
+          v-for="(entity, index) in markersList.indicatorMarks"
+          :position="entity.position"
+          :icon="'src/assets/images/' + 'IncidentReport' + '.svg'"
         />
       </div>
 

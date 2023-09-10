@@ -11,7 +11,8 @@ export let useMarkersStore = defineStore('markersStore', {
       selectedEntityIndex: -1,
       selectedEntityWaypoint: [],
       entitySide: '',
-      movingEntity: []
+      movingEntity: [],
+      indicatorMarks: []
     }
   },
   actions: {
