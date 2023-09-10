@@ -9,7 +9,7 @@ const axios = inject('axios')
 
 const table_Data = ref([])
 onMounted(async () => {
-  const scenarios = await axios.get('http://localhost:8080/Scenario/getAll')
+  const scenarios = await axios.get('http://localhost:8088/Scenario/getAll')
   table_Data.value = scenarios.data
 })
 
@@ -21,8 +21,8 @@ const scenario = ref({
 })
 async function createScenario() {
   if (scenario.value.name?.length > 0 && scenario.value.duration?.length > 0) {
-    await axios.post('http://localhost:8080/Scenario/create', scenario.value)
-    const scenarios = await axios.get('http://localhost:8080/Scenario/getAll')
+    await axios.post('http://localhost:8088/Scenario/create', scenario.value)
+    const scenarios = await axios.get('http://localhost:8088/Scenario/getAll')
     table_Data.value = scenarios.data
   } else {
     alert('Please complete the form')
