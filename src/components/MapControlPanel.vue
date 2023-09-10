@@ -41,6 +41,9 @@ function listenToUDPServer() {
       markersList.movingEntity = []
     }
   })
+  socket.on('udp-incidentReportMessage', (message) => {
+    console.log(" I got a report"+message);
+  })
 }
 
 const axios = inject('axios')
@@ -68,7 +71,7 @@ async function sendEntity() {
       waypoints: newWaypoint
     })
   }
-  axios.post('http://localhost:8080/EntityRoute/simulate', payload)
+  axios.post('http://localhost:8088/EntityRoute/simulate', payload)
 }
 </script>
 <template>

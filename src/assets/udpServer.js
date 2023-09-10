@@ -6,13 +6,13 @@ udpServer.bind(PORT, HOST)
 
 udpServer.on('listening', () => console.log('udp server listening'))
 udpServer.on('message', (msg, rinfo) => {
-  // Receives from java on 9001
-  // console.log(`Received ${msg.length} bytes from ${rinfo.address}:${rinfo.port}`);
-  // let meesage = msg.toString().substring(1, msg.toString().length-2);
   let meesage = msg.toString()
   console.log('meesage to strin' + meesage)
-
-  io.emit('udp-message', meesage)
+  if(meesage.includes("note")){
+    io.emit('udp-incidentReportMessage',meesage);
+  }else{
+      io.emit('udp-message', meesage)
+  }
 })
 
 // Expose an HTTP endpoint that can be called from the Vue.js frontend
