@@ -11,12 +11,8 @@ let lastShowedWayPointIndex = -1
 
 function addWayPoint(e) {
   if (markersList.selectedEntityIndex != -1) {
-    if (markersList.selectedEntityWaypoint.length < 10) {
-      const position = { lat: e.latLng.lat(), lng: e.latLng.lng() }
-      markersList.addWaypoint(position)
-    } else {
-      alert('Already there are 10 waypoints')
-    }
+    const position = { lat: e.latLng.lat(), lng: e.latLng.lng() }
+    markersList.addWaypoint(position)
   } else {
     alert('Select entity')
   }

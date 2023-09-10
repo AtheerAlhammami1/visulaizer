@@ -13,7 +13,9 @@ const formValues = ref({
   EntityName: '',
   EntityType: 'Select Entity Type',
   EntityMode: 'Select Entity Mode',
-  EntityStartTime: null
+  EntityStartTime: null,
+  EntityDetectionRange: null,
+  EntitySIDC: ''
 })
 const iconCanvas = ref()
 const canvasContext = ref('')
@@ -47,50 +49,74 @@ const entityTypes = [
     SIDC: '120500'
   }
 ]
-const natoSIDC = ref()
-function addEntity(name, parentId, SIDC, scenarioId, entityMode, startTime) {
-  if (
-    formValues.value.EntityName != '' &&
-    formValues.value.EntityType != 'Select Entity Type' &&
-    formValues.value.EntityMode != 'Select Entity Mode' &&
-    formValues.value.EntityName != -1
-  ) {
-    modal.value.open = false
-    markersList.addEntity(name, parentId, SIDC, scenarioId, entityMode, startTime)
-    formValues.value = {
-      EntityName: '',
-      EntityType: 'Select Entity Type',
-      EntityMode: 'Select Entity Mode',
-      EntityStartTime: null
-    }
-    natoSIDC.value = ''
-    canvasContext.value.clearRect(0, 0, iconCanvas.value.width, iconCanvas.value.height)
-  } else {
-    modal.value.open = true
-    alert('Please complete the form')
+function addEntity() {
+  fillForm()
+  modal.value.open = false
+  markersList.addEntity(
+    formValues.value.EntityName,
+    0,
+    formValues.value.EntitySIDC,
+    markersList.scenarioId,
+    formValues.value.EntityMode,
+    formValues.value.EntityStartTime,
+    formValues.value.EntityDetectionRange
+  )
+  formValues.value = {
+    EntityName: '',
+    EntityType: 'Select Entity Type',
+    EntityMode: 'Select Entity Mode',
+    EntityStartTime: null,
+    EntityDetectionRange: null,
+    EntitySIDC: ''
   }
+
+  canvasContext.value.clearRect(0, 0, iconCanvas.value.width, iconCanvas.value.height)
+}
+let loadNotoSymbol = true
+function fillForm() {
+  formValues.value.EntityName =
+    formValues.value.EntityName != '' ? formValues.value.EntityName : 'Unnamed Entity'
+
+  formValues.value.EntityType =
+    formValues.value.EntityType != 'Select Entity Type' ? formValues.value.EntityType : '121900'
+
+  if (formValues.value.EntitySIDC == '') {
+    loadNotoSymbol = false
+    natoSymbologyGenerator()
+  }
+
+  formValues.value.EntityMode =
+    formValues.value.EntityMode != 'Select Entity Mode' ? formValues.value.EntityMode : 0
+
+  formValues.value.EntityStartTime =
+    formValues.value.EntityStartTime != null ? formValues.value.EntityStartTime : 0
+
+  formValues.value.EntityDetectionRange =
+    formValues.value.EntityDetectionRange != null ? formValues.value.EntityDetectionRange : 0
 }
 
 function natoSymbologyGenerator() {
-  let tempSIDC = '300310000012110000000'
+  let tempSIDC = '300310000012050000000'
   tempSIDC = setNatoClassification(tempSIDC, props.panelName == 'Friend' ? '3' : '6')
   tempSIDC = setNatoType(tempSIDC, formValues.value.EntityType)
   const natoIcon = new milsymbol.Symbol(tempSIDC)
   const svgString = natoIcon.asSVG()
   const canvasImage = new Image()
 
-  canvasImage.onload = () => {
-    canvasContext.value.drawImage(
-      canvasImage,
-      0,
-      0,
-      iconCanvas.value.width,
-      iconCanvas.value.height
-    )
+  if (loadNotoSymbol) {
+    canvasImage.onload = () => {
+      canvasContext.value.drawImage(
+        canvasImage,
+        0,
+        0,
+        iconCanvas.value.width,
+        iconCanvas.value.height
+      )
+    }
   }
-
+  loadNotoSymbol = true
   canvasImage.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`
-  natoSIDC.value = tempSIDC
+  formValues.value.EntitySIDC = tempSIDC
 }
 
 function setNatoClassification(SIDC, Num) {
@@ -143,34 +169,31 @@ const modal = ref()
         </select>
       </div>
       <div class="form-control w-full max-w-xs">
-        <label class="label"> Entity Start time </label>
+        <label class="label"> Entity Start Time </label>
         <input
           v-model="formValues.EntityStartTime"
           type="number"
-          placeholder="Entity Start time"
+          placeholder="Entity Start Time"
+          class="input input-bordered w-full max-w-xs"
+        />
+      </div>
+      <div v-if="panelName != 'Hostile'" class="form-control w-full max-w-xs">
+        <label class="label"> Entity Detection Range </label>
+        <input
+          v-model="formValues.EntityDetectionRange"
+          type="number"
+          placeholder="Entity Detection Range"
           class="input input-bordered w-full max-w-xs"
         />
       </div>
       <div class="flex justify-center mt-5">
         <canvas ref="iconCanvas" />
       </div>
-      <p class="text-center mt-5" v-if="natoSIDC?.length">Nato SIDC : {{ natoSIDC }}</p>
+      <p class="text-center mt-5" v-if="formValues.EntitySIDC.length != 0">
+        Nato SIDC : {{ formValues.EntitySIDC }}
+      </p>
       <div class="modal-action flex justify-center">
-        <button
-          class="btn btn-wide"
-          @click.prevent="
-            addEntity(
-              formValues.EntityName,
-              0,
-              natoSIDC,
-              markersList.scenarioId,
-              formValues.EntityMode,
-              formValues.EntityStartTime
-            )
-          "
-        >
-          Create Entity
-        </button>
+        <button class="btn btn-wide" @click.prevent="addEntity()">Create Entity</button>
       </div>
     </form>
   </dialog>
