@@ -40,7 +40,7 @@ export let useMarkersStore = defineStore('markersStore', {
       const entitySide = SIDC.slice(3, 4)
       if (entitySide == 3) {
         this.friendEntities.push({
-          id: this.entityNumber,
+          id: `${this.entityNumber}`,
           name: name,
           parentId: parentId,
           SIDC: SIDC,
@@ -52,7 +52,7 @@ export let useMarkersStore = defineStore('markersStore', {
         })
       } else if (entitySide == 6) {
         this.hostileEntities.push({
-          id: this.entityNumber,
+          id: `${this.entityNumber}`,
           name: name,
           parentId: parentId,
           SIDC: SIDC,

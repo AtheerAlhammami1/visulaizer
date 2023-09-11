@@ -12,7 +12,7 @@ const markersList = useMarkersStore()
 
 function listenToUDPServer() {
   socket.on('udp-message', (message) => {
-    if (String(message).charAt(0) == '{') {
+    if (message.charAt(0) == '{') {
       const newWaypoint = JSON.parse(message)
       const index = markersList.movingEntity.findIndex(
         (waypoint) => waypoint.entityRouteId == newWaypoint.entityRouteId
@@ -36,38 +36,53 @@ function listenToUDPServer() {
             lng: newWaypoint.longitude
           }
         }
+        const indexReport = markersList.indicatorMarks.findIndex(
+          (report) => report.enemyId == newWaypoint.entityRouteId
+        )
+        if (indexReport != -1) {
+          markersList.indicatorMarks[indexReport].position = {
+            lat: newWaypoint.latitude + 0.25,
+            lng: newWaypoint.longitude + 0.25
+          }
+        }
       }
     } else {
       markersList.movingEntity = []
+      markersList.indicatorMarks = []
     }
   })
   socket.on('udp-incidentReportMessage', (message) => {
-    console.log(' I got a report' + message)
-    if (String(message).charAt(0) == '{') {
+    console.log(message)
+    if (message.charAt(0) == '{') {
       const newReport = JSON.parse(message)
       const index = markersList.indicatorMarks.findIndex(
         (report) => report.enemyId == newReport.enemyId
       )
-
       if (index == -1) {
         markersList.indicatorMarks.push({
           enemyId: newReport.enemyId,
+          friendlyId: [newReport.friendlyId],
           position: {
             lat: newReport.enemyLatitude + 0.25,
             lng: newReport.enemyLongitude + 0.25
           }
         })
       } else if (index != -1) {
-        markersList.indicatorMarks[index] = {
-          enemyId: newReport.enemyId,
-          position: {
-            lat: newReport.enemyLatitude + 0.25,
-            lng: newReport.enemyLongitude + 0.25
+        const tempIndex = markersList.indicatorMarks[index].friendlyId.findIndex(
+          (id) => id == newReport.friendlyId
+        )
+        console.log(tempIndex == -1)
+        if (tempIndex == -1) {
+          markersList.indicatorMarks[index].friendlyId.push(newReport.friendlyId)
+        } else if (tempIndex != -1) {
+          markersList.indicatorMarks[index].friendlyId = markersList.indicatorMarks[
+            index
+          ].friendlyId.filter((id) => id != newReport.friendlyId)
+          if (markersList.indicatorMarks[index].friendlyId.length == 0) {
+            markersList.indicatorMarks.splice(index, 1)
           }
         }
       }
-    } else {
-      markersList.indicatorMarks = []
     }
   })
 }
