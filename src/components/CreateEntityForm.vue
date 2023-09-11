@@ -11,10 +11,10 @@ const props = defineProps({
 })
 const formValues = ref({
   EntityName: '',
-  EntityType: 'Select Entity Type',
-  EntityMode: 'Select Entity Mode',
-  EntityStartTime: null,
-  EntityDetectionRange: null,
+  EntityType: '121100',
+  EntityMode: '0',
+  EntityStartTime: 0,
+  EntityDetectionRange: 0,
   EntitySIDC: ''
 })
 const iconCanvas = ref()
@@ -63,19 +63,20 @@ function addEntity() {
   )
   formValues.value = {
     EntityName: '',
-    EntityType: 'Select Entity Type',
-    EntityMode: 'Select Entity Mode',
-    EntityStartTime: null,
-    EntityDetectionRange: null,
+    EntityType: '121100',
+    EntityMode: '0',
+    EntityStartTime: 0,
+    EntityDetectionRange: 0,
     EntitySIDC: ''
   }
 
   canvasContext.value.clearRect(0, 0, iconCanvas.value.width, iconCanvas.value.height)
 }
 let loadNotoSymbol = true
+natoSymbologyGenerator();// Default for form
 function fillForm() {
   formValues.value.EntityName =
-    formValues.value.EntityName != '' ? formValues.value.EntityName : 'Unnamed Entity'
+    formValues.value.EntityName != '' ? formValues.value.EntityName : 'UnKnown Entity'
 
   formValues.value.EntityType =
     formValues.value.EntityType != 'Select Entity Type' ? formValues.value.EntityType : '121900'
@@ -138,7 +139,7 @@ const modal = ref()
         <input
           v-model="formValues.EntityName"
           type="text"
-          placeholder="Entity Name"
+          placeholder="UnKnown Entity"
           class="input input-bordered w-full max-w-xs"
         />
       </div>
