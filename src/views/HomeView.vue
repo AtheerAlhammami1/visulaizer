@@ -5,7 +5,6 @@ import { onMounted, reactive, ref, inject } from 'vue'
 import { useMarkersStore } from '../stores/useMarkers'
 import { io } from 'socket.io-client'
 let markersList = useMarkersStore() // to access waypoints array across pages
-let center = reactive({ lat: 24, lng: 47 }) // center of the map view
 // const socket = io('http://127.0.0.1:3000')
 onMounted(() => {
   // listenToUDPServer()
@@ -31,7 +30,7 @@ function trackRecieved(jsonMessageRecieved) {
   markersList.insert(rowCount + 1, track.id, track.latitude, track.longitude)
   center.lat = track.latitude // move map focal point to the new waypoint
   center.lng = track.longitude
-  console.log(jsonMessageRecieved)
+  // console.log(jsonMessageRecieved)
 }
 /*
  ** Function to send From vue to UDP Server
@@ -46,7 +45,7 @@ function sendToUDPServer() {
       }
     })
     .then((response) => {
-      console.log('resposne: ' + response.data)
+      // console.log('resposne: ' + response.data)
     })
     .catch((error) => {
       console.error(error)
@@ -57,6 +56,6 @@ function sendToUDPServer() {
 <template>
   <main class="flex justify-center w-full h-full" style="height: calc(100% - 97px)">
     <!-- <RouteHistory class="w-1/2 h-full border-2"></RouteHistory> -->
-    <Map class="w-full" :center="center"></Map>
+    <Map class="w-full"></Map>
   </main>
 </template>

@@ -33,7 +33,7 @@ const entityModes = [
 const entityTypes = [
   {
     name: 'Aircraft',
-    SIDC: '121900'
+    SIDC: '110300'
   },
   {
     name: 'Infantry',
@@ -42,6 +42,26 @@ const entityTypes = [
   {
     name: 'Tank',
     SIDC: '120500'
+  },
+  {
+    name: 'Armored Tracked',
+    SIDC: '30061000141211020000'
+  },
+  {
+    name: 'Infantry v2',
+    SIDC: '30031000131211000000'
+  },
+  {
+    name: 'Tank v2',
+    SIDC: '30031000151211020000'
+  },
+  {
+    name: 'Tank v3',
+    SIDC: '30031000161211020000'
+  },
+  {
+    name: 'artillery',
+    SIDC: '30031000151303000000'
   }
 ]
 function handleCreateModel(isConfirmed) {
@@ -98,6 +118,19 @@ function setNatoClassification(SIDC, Num) {
   return SIDC.slice(0, 3) + Num + SIDC.slice(3 + Num.length)
 }
 function setNatoType(SIDC, Num) {
+  if (Num === '110300') {
+    return '30030100001103000000'
+  } else if (Num === '30061000141211020000') {
+    return '30061000141211020000'
+  } else if (Num === '30031000131211000000') {
+    return '30031000131211000000'
+  } else if (Num === '30031000151211020000') {
+    return '30031000151211020000'
+  } else if (Num === '30031000161211020000') {
+    return '30031000161211020000'
+  } else if (Num == '30031000151303000000') {
+    return '30031000151303000000'
+  }
   return SIDC.slice(0, 10) + Num + SIDC.slice(10 + Num.length)
 }
 const modal = ref()

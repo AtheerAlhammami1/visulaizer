@@ -71,7 +71,7 @@ function listenToUDPServer() {
         const tempIndex = markersList.indicatorMarks[index].friendlyId.findIndex(
           (id) => id == newReport.friendlyId
         )
-        console.log(tempIndex == -1)
+        // console.log(tempIndex == -1)
         if (tempIndex == -1) {
           markersList.indicatorMarks[index].friendlyId.push(newReport.friendlyId)
         } else if (tempIndex != -1) {
@@ -113,6 +113,7 @@ async function sendEntity() {
       waypoints: newWaypoint
     })
   }
+  console.error(payload)
   axios.post('http://localhost:8088/EntityRoute/simulate', payload)
 }
 </script>

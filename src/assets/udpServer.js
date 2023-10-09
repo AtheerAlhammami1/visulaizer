@@ -8,10 +8,10 @@ udpServer.on('listening', () => console.log('udp server listening'))
 udpServer.on('message', (msg, rinfo) => {
   let meesage = msg.toString()
   console.log('meesage to strin' + meesage)
-  if(meesage.includes("note")){
-    io.emit('udp-incidentReportMessage',meesage);
-  }else{
-      io.emit('udp-message', meesage)
+  if (meesage.includes('note')) {
+    io.emit('udp-incidentReportMessage', meesage)
+  } else {
+    io.emit('udp-message', meesage)
   }
 })
 
@@ -21,7 +21,7 @@ const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server, {
   cors: {
-    origin: ['http://localhost:5173','http://127.0.0.1:5173'],
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
     methods: ['GET', 'POST']
   }
 })
@@ -29,7 +29,7 @@ const io = require('socket.io')(server, {
 const cors = require('cors')
 app.use(
   cors({
-        origin: ['http://localhost:5173','http://127.0.0.1:5173'],
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173']
   })
 )
 

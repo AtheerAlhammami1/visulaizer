@@ -74,10 +74,6 @@ function waypointColor(index) {
   return path + fileName
 }
 
-defineProps({
-  center: Object
-})
-
 const numberOfLines = computed(() =>
   markersList.selectedEntityWaypoint.length != 0 ? markersList.selectedEntityWaypoint.length - 1 : 0
 )
@@ -99,8 +95,8 @@ const mapOptions = {
     />
     <GMapMap
       ref="map"
-      :center="center"
-      :zoom="7"
+      :center="{ lat: 16.6, lng: 43 }"
+      :zoom="12"
       map-type-id="hybrid"
       @click="addWayPoint($event)"
       @dragstart="showWaypointInformationModal = false"
@@ -114,12 +110,12 @@ const mapOptions = {
           :position="entity.position"
           :icon="'src/assets/images/' + entity.SIDC + '.svg'"
         />
-        <GMapMarker
+        <!-- <GMapMarker
           :key="index"
           v-for="(entity, index) in markersList.indicatorMarks"
           :position="entity.position"
           :icon="'src/assets/images/' + 'IncidentReport' + '.svg'"
-        />
+        /> -->
       </div>
 
       <div v-if="markersList.movingEntity.length == 0">
